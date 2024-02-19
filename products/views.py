@@ -16,6 +16,10 @@ def products_list(request):
     List of all products.
     """
 
-    products = Product.objects.all()
+    params = dict(request.query_params)
+    if "is_refrigerated" in params:
+        products = Product.objects.filter(is_refrigerated=params["is_refrigerated"][0])
+    else:
+        products = Product.objects.all()
     serializer = ProductListSerializer(products, many=True)
     return Response({"products": serializer.data}, status=HTTP_200_OK)
